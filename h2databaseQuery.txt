@@ -1,7 +1,9 @@
 CREATE TABLE USER (id number, surname varchar(20), name varchar(20), email varchar(40), username varchar(20));  
 INSERT into USER values (1, 'Olszewski', 'Wiktor', 'wolszewski@gmail.com', 'wolszewski'); 
+INSERT into USER values (2, 'Legierska', 'Laura', 'llegierska@gmail.com', 'llegierska'); 
 SELECT * FROM USER;
 
 CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date);
 INSERT into PASSWORD values (1, 1, 'kE3B54eEkGRW0w8', DATE '2021-01-06'); 
+INSERT into PASSWORD values (2, 2, 'Idl3aZ8qdjS9m9G', DATE '2021-01-05'); 
 SELECT * FROM PASSWORD;
