@@ -3,6 +3,7 @@ package pl.et.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,69 +23,84 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/Validation")
 public class Validation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Validation() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-    public void init () throws ServletException{
-    	        
-    	    }
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public Validation() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-     
+	public void init() throws ServletException {
+
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		    throws ServletException,IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-		        PrintWriter out = response.getWriter();
-		        String connectionURL = "jdbc:h2:tcp://localhost/~/test10";
-		        Connection connection = null;
-		        PreparedStatement preparedStatement = null;
-		        ResultSet rs = null;
-		        String username = request.getParameter("username");
-		        String password =request.getParameter("password");
-		        response.setContentType("text/html");
+	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		        try{
-		        	Class.forName("org.h2.Driver"); 
-		        	connection = DriverManager.getConnection(connectionURL, "sa", "");
-		            String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and status = 'ACTUAL'";
-		            String destPage = "form.jsp";
-		            
-		            preparedStatement = connection.prepareStatement(sql);
-		            preparedStatement.setString(1, username);
-		            preparedStatement.setString(2, password);
+		PrintWriter out = response.getWriter();
+		String connectionURL = "jdbc:h2:tcp://localhost/~/test10";
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		response.setContentType("text/html");
 
-    	            rs =preparedStatement.executeQuery();
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and status = 'ACTUAL'";
+			String destPage = "form.jsp";
 
-		             if(rs.next()) {
-		            	 request.setAttribute("username", request.getParameter("username"));
-		            	 request.setAttribute("password", request.getParameter("password"));
-		            	 request.getRequestDispatcher("/welcome.jsp").forward(request, response);
-		            	 //out.println("You are valid");
-		             }
-		             else {
-		               out.println("You are not valid");
-		             }
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
 
-		        }catch(Exception e) {
-		            System.out.println("The exception is" + e);
+			rs = preparedStatement.executeQuery();
 
-		        }
+			if (rs.next()) {
+				sql = "select p.expire_max from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and status = 'ACTUAL'";
+				preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setString(1, username);
+				preparedStatement.setString(2, password);
 
-		    }
+				rs = preparedStatement.executeQuery();
+				if (rs.next()) {
+					System.out.println(rs.getDate(1));
+					if (rs.getDate(1).after(new Date())) {
+						System.out.println(new Date());
+						request.setAttribute("username", request.getParameter("username"));
+						request.setAttribute("password", request.getParameter("password"));
+						request.getRequestDispatcher("/welcome.jsp").forward(request, response);
+					} else {
+						request.setAttribute("username", request.getParameter("username"));
+						request.getRequestDispatcher("/password2.jsp").forward(request, response);
+					}
+				}
+
+			} else {
+				out.println("You are not valid");
+			}
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+
+	}
 
 }
