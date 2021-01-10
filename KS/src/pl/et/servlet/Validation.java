@@ -80,7 +80,7 @@ public class Validation extends HttpServlet {
 
 				rs = preparedStatement.executeQuery();
 				if (rs.next()) {
-					System.out.println(rs.getDate(1));
+					
 					if (rs.getDate(1).after(new Date())) {
 						
 						request.setAttribute("username", request.getParameter("username"));

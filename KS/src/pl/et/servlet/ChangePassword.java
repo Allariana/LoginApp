@@ -56,27 +56,34 @@ public class ChangePassword extends HttpServlet {
 		String r_password = request.getParameter("repeat_password");
 		response.setContentType("text/html");
 
-		if (password.equals(r_password)) {
-			try {
-				Class.forName("org.h2.Driver");
-				connection = DriverManager.getConnection(connectionURL, "sa", "");
-				String sql1 = "SELECT ID FROM USER WHERE USERNAME = ?";
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql1 = "SELECT ID FROM USER WHERE USERNAME = ?";
+			preparedStatement = connection.prepareStatement(sql1);
+			preparedStatement.setString(1, request.getParameter("username"));
+			rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				String id = rs.getObject(1).toString();
+				sql1 = "select expire_min from password where user_id = ? and status = 'ACTUAL'";
 				preparedStatement = connection.prepareStatement(sql1);
-				preparedStatement.setString(1, request.getParameter("username"));
+				preparedStatement.setString(1, id);
 				rs = preparedStatement.executeQuery();
+
 				if (rs.next()) {
+					if (rs.getDate(1).after(new Date())) {
+						out.println("Password not passed the minimum validity interval!");
+					} else if (password.equals(r_password)) {
 
-					String id = rs.getObject(1).toString();
-					sql1 = "select expire_min from password where user_id = ? and status = 'ACTUAL'";
-					preparedStatement = connection.prepareStatement(sql1);
-					preparedStatement.setString(1, id);
-					rs = preparedStatement.executeQuery();
-					if (rs.next()) {
-						
-						if (rs.getDate(1).after(new Date())) {
-							out.println("Nie minal minimalny okres waznosci hasla!");
+						sql1 = "select * from password where user_id = ? and password = ?";
+						preparedStatement = connection.prepareStatement(sql1);
+						preparedStatement.setString(1, id);
+						preparedStatement.setString(2, password);
+						rs = preparedStatement.executeQuery();
+						if (rs.next()) {
+							out.println("You have used this password earlier!");
 						} else {
-
 							String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
 							preparedStatement = connection.prepareStatement(sql2);
 							preparedStatement.setString(1, id);
@@ -86,19 +93,19 @@ public class ChangePassword extends HttpServlet {
 							preparedStatement = connection.prepareStatement(sql);
 							preparedStatement.setString(1, id);
 							preparedStatement.setString(2, password);
-
 							preparedStatement.execute();
 
 							request.getRequestDispatcher("/form.jsp").forward(request, response);
 						}
-					}
+					} else
+						out.println("Different passwords!");
 				}
-
-			} catch (Exception e) {
-				System.out.println("The exception is" + e);
-
 			}
-		} else
-			out.println("Different passwords!");
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
 	}
+
 }
