@@ -61,7 +61,7 @@ public class Validation extends HttpServlet {
 		        try{
 		        	Class.forName("org.h2.Driver"); 
 		        	connection = DriverManager.getConnection(connectionURL, "sa", "");
-		            String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ?";
+		            String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and status = 'ACTUAL'";
 		            String destPage = "form.jsp";
 		            
 		            preparedStatement = connection.prepareStatement(sql);

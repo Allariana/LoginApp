@@ -68,8 +68,12 @@ public class ChangePassword extends HttpServlet {
 					System.out.println(rs.getString(1));
 					String id = rs.getObject(1).toString();
 					
-					String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE); ";
-
+					String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+					preparedStatement = connection.prepareStatement(sql2);
+					preparedStatement.setString(1, id);
+					preparedStatement.execute();
+					
+					String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
 					preparedStatement = connection.prepareStatement(sql);
 					preparedStatement.setString(1, id);
 					preparedStatement.setString(2, password);
