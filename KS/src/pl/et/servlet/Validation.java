@@ -82,7 +82,7 @@ public class Validation extends HttpServlet {
 				if (rs.next()) {
 					System.out.println(rs.getDate(1));
 					if (rs.getDate(1).after(new Date())) {
-						System.out.println(new Date());
+						
 						request.setAttribute("username", request.getParameter("username"));
 						request.setAttribute("password", request.getParameter("password"));
 						request.getRequestDispatcher("/welcome.jsp").forward(request, response);

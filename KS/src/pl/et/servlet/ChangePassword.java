@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,7 +46,7 @@ public class ChangePassword extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		PrintWriter out = response.getWriter();
 		String connectionURL = "jdbc:h2:tcp://localhost/~/test10";
 		Connection connection = null;
@@ -65,28 +66,39 @@ public class ChangePassword extends HttpServlet {
 				rs = preparedStatement.executeQuery();
 				if (rs.next()) {
 
-					System.out.println(rs.getString(1));
 					String id = rs.getObject(1).toString();
-					
-					String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
-					preparedStatement = connection.prepareStatement(sql2);
+					sql1 = "select expire_min from password where user_id = ? and status = 'ACTUAL'";
+					preparedStatement = connection.prepareStatement(sql1);
 					preparedStatement.setString(1, id);
-					preparedStatement.execute();
-					
-					String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setString(1, id);
-					preparedStatement.setString(2, password);
+					rs = preparedStatement.executeQuery();
+					if (rs.next()) {
+						
+						if (rs.getDate(1).after(new Date())) {
+							out.println("Nie minal minimalny okres waznosci hasla!");
+						} else {
 
-					preparedStatement.execute();
+							String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+							preparedStatement = connection.prepareStatement(sql2);
+							preparedStatement.setString(1, id);
+							preparedStatement.execute();
 
-					request.getRequestDispatcher("/form.jsp").forward(request, response);
+							String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
+							preparedStatement = connection.prepareStatement(sql);
+							preparedStatement.setString(1, id);
+							preparedStatement.setString(2, password);
+
+							preparedStatement.execute();
+
+							request.getRequestDispatcher("/form.jsp").forward(request, response);
+						}
+					}
 				}
 
 			} catch (Exception e) {
 				System.out.println("The exception is" + e);
 
 			}
-		}else out.println("Different passwords!");
+		} else
+			out.println("Different passwords!");
 	}
 }
