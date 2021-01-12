@@ -84,18 +84,23 @@ public class ChangePassword extends HttpServlet {
 						if (rs.next()) {
 							out.println("You have used this password earlier!");
 						} else {
-							String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
-							preparedStatement = connection.prepareStatement(sql2);
-							preparedStatement.setString(1, id);
-							preparedStatement.execute();
+							if (password.length() < 8)
+								out.println("Password is too short! Password must have at least 8 letters!");
 
-							String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
-							preparedStatement = connection.prepareStatement(sql);
-							preparedStatement.setString(1, id);
-							preparedStatement.setString(2, password);
-							preparedStatement.execute();
+							else {
+								String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+								preparedStatement = connection.prepareStatement(sql2);
+								preparedStatement.setString(1, id);
+								preparedStatement.execute();
 
-							request.getRequestDispatcher("/form.jsp").forward(request, response);
+								String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
+								preparedStatement = connection.prepareStatement(sql);
+								preparedStatement.setString(1, id);
+								preparedStatement.setString(2, password);
+								preparedStatement.execute();
+
+								request.getRequestDispatcher("/form.jsp").forward(request, response);
+							}
 						}
 					} else
 						out.println("Different passwords!");
