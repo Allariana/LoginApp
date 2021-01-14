@@ -77,14 +77,14 @@ public class Validation extends HttpServlet {
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setString(1, username);
 				preparedStatement.setString(2, password);
-
+				
 				rs = preparedStatement.executeQuery();
 				if (rs.next()) {
 					
-					if (rs.getDate(1).after(new Date())) {
-						
+					if (rs.getDate(1).after(new Date())) {	
 						request.setAttribute("username", request.getParameter("username"));
 						request.setAttribute("password", request.getParameter("password"));
+						preparedStatement.execute();			
 						request.getRequestDispatcher("/welcome.jsp").forward(request, response);
 					} else {
 						request.setAttribute("username", request.getParameter("username"));
