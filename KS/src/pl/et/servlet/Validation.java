@@ -63,13 +63,11 @@ public class Validation extends HttpServlet {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and status = 'ACTUAL'";
+			String sql = "select * from user u join password p on u.id = p.user_id join time t on t.user_id = p.user_id where u.username = ? and p.password = ?  and status = 'ACTUAL'";
 			String destPage = "form.jsp";
-
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, password);
-
 			rs = preparedStatement.executeQuery();
 
 			if (rs.next()) {
@@ -77,22 +75,30 @@ public class Validation extends HttpServlet {
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setString(1, username);
 				preparedStatement.setString(2, password);
-				
 				rs = preparedStatement.executeQuery();
 				if (rs.next()) {
 					
-					if (rs.getDate(1).after(new Date())) {	
+					if (rs.getDate(1).after(new Date())) {
 						request.setAttribute("username", request.getParameter("username"));
 						request.setAttribute("password", request.getParameter("password"));
-						preparedStatement.execute();			
+						sql = "SELECT ID FROM USER WHERE USERNAME = ?";
+						preparedStatement = connection.prepareStatement(sql);
+						preparedStatement.setString(1, request.getParameter("username"));
+						rs = preparedStatement.executeQuery();
+					}
+					if (rs.next()) {	
+						String id = rs.getObject(1).toString();
+						sql = "INSERT into TIME values ((VALUES NEXT VALUE FOR auto.number),?, SYSDATE, SYSDATE)";
+						preparedStatement = connection.prepareStatement(sql);
+						preparedStatement.setString(1, id);
+						preparedStatement.execute();
 						request.getRequestDispatcher("/welcome.jsp").forward(request, response);
 					} else {
 						request.setAttribute("username", request.getParameter("username"));
 						request.getRequestDispatcher("/password2.jsp").forward(request, response);
 					}
 				}
-
-			} else {
+			}else {
 				out.println("You are not valid");
 			}
 

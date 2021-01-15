@@ -1,5 +1,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="java.util.*"%> 
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -13,10 +14,11 @@
 <h3>Login</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
 	<form name="loginForm" method = "POST" action="Validation">
-	User name: <input type="text" name="username" value="">
+	User name* : <input type="text" value="${after.inputName}" name="username" value="">
 	<br>
-	Password: <input type="password" name="password" value="">
-	<br>
+	Password* : <input type="password" name="password" value="">
+	<br><br>
+	<p style="color: black;">* Required field</p> 
 	<input type="submit" value="Submit">
 	<br>
 	</form>
