@@ -37,7 +37,7 @@ public class LoginTimedOut extends HttpServlet {
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
 			String sql = "SELECT ID FROM USER WHERE USERNAME = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, request.getParameter("username"));
+			preparedStatement.setString(1, request.getParameter("dane"));
 			rs = preparedStatement.executeQuery();
 			
 			if (rs.next()) {

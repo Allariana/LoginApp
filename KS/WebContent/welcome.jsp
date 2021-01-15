@@ -43,16 +43,17 @@ if (id != null)
  %>
 
  <%
-   String username = request.getParameter( "username" );
-   session.setAttribute( "username", username);
+ String dane = "";
+ Object dane1 = request.getAttribute("username");
+ if (dane1 != null)
+ 	dane = dane1.toString();
 %>
-
-
 	<sql:setDataSource var="db1" driver="org.h2.Driver"
 		url="jdbc:h2:tcp://localhost/~/test10" user="sa" password="" />
 		
 		<sql:query var="query1" dataSource="${db1}">
-		SELECT * FROM time where user_id=1
+		SELECT * FROM TIME t JOIN USER u ON u.id=t.user_id where u.username = ?
+		<sql:param value="${username}"/>
 	</sql:query>
 		
     <div style="border:1px">
