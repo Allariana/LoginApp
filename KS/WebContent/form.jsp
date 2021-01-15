@@ -14,11 +14,11 @@
 <h3>Login</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
 	<form name="loginForm" method = "POST" action="Validation">
-	User name* : <input type="text" value="${after.inputName}" name="username" value="">
+	User name* : User name: <input type="text" name="username" value="" placeholder="username" required>
 	<br>
-	Password* : <input type="password" name="password" value="">
+	Password* : <input type="password" name="password" value="" placeholder="password" required>
 	<br><br>
-	<p style="color: black;">* Required field</p> 
+	<p style="color: black;"><i>* Required field</i></p> 
 	<input type="submit" value="Submit">
 	<br>
 	</form>
