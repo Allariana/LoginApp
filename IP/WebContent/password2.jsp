@@ -10,15 +10,16 @@
 <title>Form</title>
 </head>
 <body>
-<h3>Login</h3>
+<h3>${param.username} your password has expired, please change your password</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
-	<form name="loginForm" method = "POST" action="Validation">
-	User name: <input type="text" name="username" value="">
+<form name="loginForm" method = "POST" action="ChangePassword">
+	New Password:  <input type="password" name="new_password" value="" placeholder="username" required>
 	<br>
-	Password: <input type="password" name="password" value="">
+	Repeat Password:  <input type="password" name="repeat_password" value="" placeholder="username" required>
 	<br>
-	<input type="submit" value="Submit">
+	<input type="submit" value="Save">
 	<br>
+	<input type="hidden" name="username" value="${param.username}">
 	</form>
 </div>
 

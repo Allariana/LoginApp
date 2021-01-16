@@ -10,12 +10,12 @@
 <title>Form</title>
 </head>
 <body>
-<h3>${param.username}, change password</h3>
+<h3>${param.username}, change your password</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
 <form name="loginForm" method = "POST" action="ChangePassword">	
-	New Password:  <input type="password" name="new_password" value="">
+	New Password:  <input type="password" name="new_password" value="" placeholder="new password" required>
 	<br>
-	Repeat Password:  <input type="password" name="repeat_password" value="">
+	Repeat Password:  <input type="password" name="repeat_password" value="" placeholder="repeat password"" required>
 	<br>
 	<input type="submit" value="Save">
 	<br>
