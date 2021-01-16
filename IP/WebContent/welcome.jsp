@@ -35,19 +35,6 @@ td {
 </style>
 <body>
 
-<%
-String id_a = "nie umiem znalezc ID";
-Object id=request.getAttribute("id");
-if (id != null)
-	id_a = id.toString();
- %>
-
- <%
- String dane = "";
- Object dane1 = request.getAttribute("username");
- if (dane1 != null)
- 	dane = dane1.toString();
-%>
 	<sql:setDataSource var="db1" driver="org.h2.Driver"
 		url="jdbc:h2:tcp://localhost/~/test10" user="sa" password="" />
 		
@@ -67,17 +54,17 @@ if (id != null)
 			<tr>
 				<th>ID</th>
 				<th>Username</th>
-				<th>Actual Password</th>
+				<th>Login Date</th>
 				<th>Login time</th>
-				<th>Login timed out</th>
+				<th>Login timeout</th>
 			</tr>
 			<tr>
 			<c:forEach var="row" items="${query1.rows}">
 					<td><c:out value="${row.user_id}" /></td>
 					<td>${username}</td>
-					<td>${password}</td>
+					<td>${row.date}</td>
 					<td><c:out value="${row.logintime}" /></td>
-					<td><c:out value="${row.logintimedout}" /></td>
+					<td><c:out value="${row.logintimeout}" /></td>
 				</tr>
 				</c:forEach>
 		</table>

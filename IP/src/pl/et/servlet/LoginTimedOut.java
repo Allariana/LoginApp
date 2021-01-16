@@ -6,9 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,21 +35,20 @@ public class LoginTimedOut extends HttpServlet {
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
 			String sql = "SELECT ID FROM USER WHERE USERNAME = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			//String dane = request.getParameter("dane");
 			System.out.print(request.getParameter("username"));
 			preparedStatement.setString(1, request.getParameter("username"));
 			rs = preparedStatement.executeQuery();
 
 			if (rs.next()) {
 				String id = rs.getObject(1).toString();
-				sql = "select logintimedout from time where user_id = ? and status = 'ACTUAL'";
+				sql = "select logintimeout from time where user_id = ? and status = 'ACTUAL'";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setString(1, id);
 				rs = preparedStatement.executeQuery();
 
 				if (rs.next()) {
 
-					String sql2 = "UPDATE TIME SET LOGINTIMEDOUT=SYSDATE WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+					String sql2 = "UPDATE TIME SET LOGINTIMEOUT=SYSDATE WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
 					preparedStatement = connection.prepareStatement(sql2);
 					preparedStatement.setString(1, id);
 					preparedStatement.execute();

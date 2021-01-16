@@ -32,7 +32,9 @@ UPDATE PASSWORD SET EXPIRE_MAX = '2021-01-09' WHERE ID=18
 UPDATE PASSWORD SET EXPIRE_MIN = '2021-01-08' WHERE ID=21
 
 --
-CREATE TABLE TIME (id number, user_id number, LoginTime time, LoginTimedOut time, status varchar(10));
-INSERT into TIME values (1, 1, TIME '15:04:32',  TIME '16:04:32', 'old' );
-INSERT into TIME values (2, 2, TIME '20:04:32', TIME '20:20:32', 'old'); 
+CREATE TABLE TIME (id number, user_id number, Date date, LoginTime time, LoginTimeOut time, Status varchar(10));
+
+INSERT into TIME values (1, 1, DATE '2021-01-15',  TIME '15:04:32',  TIME '16:04:32', 'old' );
+INSERT into TIME values (2, 2,  DATE '2021-01-14', TIME '20:04:32', TIME '20:20:32', 'old'); 
+
 SELECT * FROM TIME;
