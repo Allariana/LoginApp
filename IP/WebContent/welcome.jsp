@@ -83,7 +83,7 @@ if (id != null)
 		</table>
 		<br><br>
         <td><a href="password.jsp?username=${username}">Change password</a></td>
-        <div style="text-align: right"><a href="LoginTimedOut">Logout</a></div>
+        <div style="text-align: right"><a href="LoginTimedOut?username=${username}">Logout</a></div>
     </div>
 </body>
 </html>

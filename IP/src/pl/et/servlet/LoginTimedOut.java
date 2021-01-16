@@ -19,12 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/LoginTimedOut")
 public class LoginTimedOut extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    public LoginTimedOut() {
-        super();
-    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public LoginTimedOut() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		String connectionURL = "jdbc:h2:tcp://localhost/~/test10";
 		Connection connection = null;
@@ -37,48 +38,48 @@ public class LoginTimedOut extends HttpServlet {
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
 			String sql = "SELECT ID FROM USER WHERE USERNAME = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, request.getParameter("dane"));
-			rs = preparedStatement.executeQuery();
-			
-			if (rs.next()) {
-			String id = rs.getObject(1).toString();
-			sql = "select logintimedout from time where user_id = ? and status = 'ACTUAL'";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, id);
+			//String dane = request.getParameter("dane");
+			System.out.print(request.getParameter("username"));
+			preparedStatement.setString(1, request.getParameter("username"));
 			rs = preparedStatement.executeQuery();
 
-			
 			if (rs.next()) {
-			
-				String sql2 = "UPDATE TIME SET LOGINTIMEDOUT=SYSDATE WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+				String id = rs.getObject(1).toString();
+				sql = "select logintimedout from time where user_id = ? and status = 'ACTUAL'";
+				preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setString(1, id);
+				rs = preparedStatement.executeQuery();
+
+				if (rs.next()) {
+
+					String sql2 = "UPDATE TIME SET LOGINTIMEDOUT=SYSDATE WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
 					preparedStatement = connection.prepareStatement(sql2);
 					preparedStatement.setString(1, id);
 					preparedStatement.execute();
-					
+
 					String sql1 = "UPDATE TIME SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
 					preparedStatement = connection.prepareStatement(sql1);
 					preparedStatement.setString(1, id);
 					preparedStatement.execute();
 					request.getRequestDispatcher("/form.jsp").forward(request, response);
-							
-			} else {
-			out.println("Something gone wrong");
-							}
 
-				} else
-					out.println("I don't know why it doesn't work");
+				} else {
+					out.println("Something gone wrong");
+				}
 
-	} catch (Exception e) {
-		System.out.println("The exception is" + e);
+			} else
+				out.println("I don't know why it doesn't work");
 
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
 	}
-}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
-		
+
 	}
 
 }
-
-				

@@ -88,7 +88,7 @@ public class Validation extends HttpServlet {
 					}
 					if (rs.next()) {	
 						String id = rs.getObject(1).toString();
-						sql = "INSERT into TIME values ((VALUES NEXT VALUE FOR auto.number),?, SYSDATE, SYSDATE, 'ACTUAL')";
+						sql = "INSERT into TIME(ID,USER_ID, LoginTime, status) values ((VALUES NEXT VALUE FOR auto.number),?, SYSDATE, 'ACTUAL')";
 						preparedStatement = connection.prepareStatement(sql);
 						preparedStatement.setString(1, id);
 						preparedStatement.execute();
