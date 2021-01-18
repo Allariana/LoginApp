@@ -23,39 +23,22 @@ public class LoginTimedOut extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		Boolean b;
 		PrintWriter out = response.getWriter();
-		String connectionURL = "jdbc:h2:tcp://localhost/~/test10";
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet rs = null;
 		response.setContentType("text/html");
+		Database database = new Database();
 
 		try {
-			Class.forName("org.h2.Driver");
-			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "SELECT ID FROM USER WHERE USERNAME = ?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, request.getParameter("username"));
-			rs = preparedStatement.executeQuery();
 
-			if (rs.next()) {
-				String id = rs.getObject(1).toString();
-				sql = "select logintimeout from time where user_id = ? and status = 'ACTUAL'";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setString(1, id);
-				rs = preparedStatement.executeQuery();
+			String id = database.getUserId(request.getParameter("username"));
 
-				if (rs.next()) {
+			if (!id.equals("0")) {
 
-					String sql2 = "UPDATE TIME SET LOGINTIMEOUT=SYSDATE WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
-					preparedStatement = connection.prepareStatement(sql2);
-					preparedStatement.setString(1, id);
-					preparedStatement.execute();
+				b = database.selectTimeOut(id);
 
-					String sql1 = "UPDATE TIME SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
-					preparedStatement = connection.prepareStatement(sql1);
-					preparedStatement.setString(1, id);
-					preparedStatement.execute();
+				if (b) {
+
+					database.updateLogoutTime(id);
 					request.getRequestDispatcher("/form.jsp").forward(request, response);
 
 				}

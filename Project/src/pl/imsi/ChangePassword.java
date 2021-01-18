@@ -47,75 +47,46 @@ public class ChangePassword extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		Database database = new Database();
+		Boolean b = false;
 		PrintWriter out = response.getWriter();
-		String connectionURL = "jdbc:h2:tcp://localhost/~/test10";
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet rs = null;
 		String password = request.getParameter("new_password");
 		String r_password = request.getParameter("repeat_password");
 		response.setContentType("text/html");
 
 		try {
-			Class.forName("org.h2.Driver");
-			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql1 = "SELECT ID FROM USER WHERE USERNAME = ?";
-			preparedStatement = connection.prepareStatement(sql1);
-			preparedStatement.setString(1, request.getParameter("username"));
-			rs = preparedStatement.executeQuery();
+			String id = database.getUserId(request.getParameter("username"));
 
-			if (rs.next()) {
-				String id = rs.getObject(1).toString();
-				sql1 = "select expire_min from password where user_id = ? and status = 'ACTUAL'";
-				preparedStatement = connection.prepareStatement(sql1);
-				preparedStatement.setString(1, id);
-				rs = preparedStatement.executeQuery();
+			b = database.checkIfIsPasswordMinimumIntervalPassed(id);
 
-				if (rs.next()) {
-					if (rs.getDate(1).after(new Date())) {
-						out.println("Password not passed the minimum validity interval!");
-					} else if (password.equals(r_password)) {
+			if (b == false) {
+				out.println("Password not passed the minimum validity interval!");
+			} else if (password.equals(r_password)) {
 
-						sql1 = "select * from password where user_id = ? and password = ?";
-						preparedStatement = connection.prepareStatement(sql1);
-						preparedStatement.setString(1, id);
-						preparedStatement.setString(2, password);
-						rs = preparedStatement.executeQuery();
-						if (rs.next()) {
-							out.println("You have used this password earlier!");
+				b = database.checkIfIsUserHadThisPassword(id, password);
+				if (b) {
+					out.println("You have used this password earlier!");
+				} else {
+					if (password.length() < 8)
+						out.println("Password is too short! Password must have at least 8 letters!");
+
+					else {
+						String regex = "^(?=.*[a-z])(?=." + "*[A-Z])(?=.*\\d)" + "(?=.*[-+_!@#$%^&*., ?]).+$";
+						Pattern p = Pattern.compile(regex);
+						Matcher m = p.matcher(password);
+						if (m.matches()) {
+							database.changePassword(id, password);
+							database.updateLogoutTime(id);
+							request.getRequestDispatcher("/form.jsp").forward(request, response);
 						} else {
-							if (password.length() < 8)
-								out.println("Password is too short! Password must have at least 8 letters!");
-
-							else {
-								String regex = "^(?=.*[a-z])(?=." + "*[A-Z])(?=.*\\d)" + "(?=.*[-+_!@#$%^&*., ?]).+$";
-								Pattern p = Pattern.compile(regex);
-								Matcher m = p.matcher(password);
-								if (m.matches()) {
-									String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
-									preparedStatement = connection.prepareStatement(sql2);
-									preparedStatement.setString(1, id);
-									preparedStatement.execute();
-
-									String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
-									preparedStatement = connection.prepareStatement(sql);
-									preparedStatement.setString(1, id);
-									preparedStatement.setString(2, password);
-									preparedStatement.execute();
-
-									request.getRequestDispatcher("/form.jsp").forward(request, response);
-								} else {
-									out.println("Password does not meet the complexity requirement!");
-									out.println(
-											"Password must contain uppercase, lowercase, special character and numeric value.");
-								}
-							}
+							out.println("Password does not meet the complexity requirement!");
+							out.println(
+									"Password must contain uppercase, lowercase, special character and numeric value.");
 						}
-					} else
-						out.println("Different passwords!");
+					}
 				}
-			}
+			} else
+				out.println("Different passwords!");
 
 		} catch (Exception e) {
 			System.out.println("The exception is" + e);

@@ -79,6 +79,47 @@ public class Database {
 		}
 		return b;
 	}
+	public boolean checkIfIsUserHadThisPassword(String id, String password) throws SQLException {
+		boolean b = false;
+
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql1 = "select * from password where user_id = ? and password = ?";
+			preparedStatement = connection.prepareStatement(sql1);
+			preparedStatement.setString(1, id);
+			preparedStatement.setString(2, password);
+			rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				b = true;
+			}
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+		return b;
+	}
+	public boolean selectTimeOut(String id) throws SQLException {
+		boolean b = false;
+
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql = "select logintimeout from time where user_id = ? and status = 'ACTUAL'";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id);
+			rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				b = true;
+			}
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+		return b;
+	}
 
 	public String getUserId(String username) throws SQLException {
 		String id = "0";
@@ -198,6 +239,28 @@ public class Database {
 		}
 		return b;
 	}
+	public boolean checkIfIsPasswordMinimumIntervalPassed(String id) throws SQLException {
+		boolean b = false;
+
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql = "select expire_min from password where user_id = ? and status = 'ACTUAL'";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id);
+			rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				if (rs.getDate(1).before(new Date())) {
+					b = true;
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+		return b;
+	}
 	public void insertIntoTime(String id) throws SQLException {
 
 		try {
@@ -206,6 +269,49 @@ public class Database {
 			String sql = "INSERT into TIME(ID,USER_ID,Date, LoginTime, status) values ((VALUES NEXT VALUE FOR auto.number),?, SYSDATE, SYSDATE, 'ACTUAL')";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+
+	}
+	public void updateLogoutTime(String id) throws SQLException {
+
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql2 = "UPDATE TIME SET LOGINTIMEOUT=SYSDATE WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+			preparedStatement = connection.prepareStatement(sql2);
+			preparedStatement.setString(1, id);
+			preparedStatement.execute();
+
+			String sql1 = "UPDATE TIME SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+			preparedStatement = connection.prepareStatement(sql1);
+			preparedStatement.setString(1, id);
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+
+	}
+	public void changePassword(String id, String password) throws SQLException {
+
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+			preparedStatement = connection.prepareStatement(sql2);
+			preparedStatement.setString(1, id);
+			preparedStatement.execute();
+
+			String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id);
+			preparedStatement.setString(2, password);
 			preparedStatement.execute();
 
 		} catch (Exception e) {
