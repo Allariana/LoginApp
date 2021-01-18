@@ -41,7 +41,7 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "select b.date_end from block b join user u on b.user_id =u.id where u.username = ?";
+			String sql = "select b.date_end from block b join user u on b.user_id =u.id where u.username = ? order by b.date_start desc";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, username);
 			rs = preparedStatement.executeQuery();

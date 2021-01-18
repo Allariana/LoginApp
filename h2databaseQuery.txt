@@ -42,4 +42,4 @@ SELECT * FROM TIME;
 --
 CREATE TABLE LOGINTEST (id number, user_id number);
 
-CREATE TABLE BLOCK (id number, user_id number, date_start date, date_end date);
+CREATE TABLE BLOCK (id number, user_id number, date_start timestamp, date_end timestamp);
