@@ -159,6 +159,22 @@ public class Database {
 		}
 
 	}
+	public void deleteFromLoginTest(String id) throws SQLException {
+
+		try {
+			Class.forName("org.h2.Driver");
+			connection = DriverManager.getConnection(connectionURL, "sa", "");
+			String sql = "DELETE FROM LOGINTEST WHERE USER_ID = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id);
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			System.out.println("The exception is" + e);
+
+		}
+
+	}
 	public boolean checkIfIsPasswordExpired(String username, String password) throws SQLException {
 		boolean b = false;
 

@@ -35,7 +35,6 @@ public class LoginTimedOut extends HttpServlet {
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
 			String sql = "SELECT ID FROM USER WHERE USERNAME = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			System.out.print(request.getParameter("username"));
 			preparedStatement.setString(1, request.getParameter("username"));
 			rs = preparedStatement.executeQuery();
 
@@ -59,12 +58,9 @@ public class LoginTimedOut extends HttpServlet {
 					preparedStatement.execute();
 					request.getRequestDispatcher("/form.jsp").forward(request, response);
 
-				} else {
-					out.println("Something gone wrong");
 				}
 
-			} else
-				out.println("I don't know why it doesn't work");
+			}
 
 		} catch (Exception e) {
 			System.out.println("The exception is" + e);

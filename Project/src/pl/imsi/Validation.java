@@ -93,6 +93,7 @@ public class Validation extends HttpServlet {
 						else {
 							id = database.getUserId(username);
 							database.insertIntoTime(id);
+							database.deleteFromLoginTest(id);
 							request.setAttribute("username", request.getParameter("username"));
 							request.getRequestDispatcher("/welcome.jsp").forward(request, response);
 						}
