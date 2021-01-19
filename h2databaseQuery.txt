@@ -43,3 +43,11 @@ SELECT * FROM TIME;
 CREATE TABLE LOGINTEST (id number, user_id number);
 
 CREATE TABLE BLOCK (id number, user_id number, date_start timestamp, date_end timestamp);
+
+---
+DROP TABLE TIME
+
+CREATE TABLE LOGINTIME (ID NUMBER, USER_ID NUMBER, LOGINTIME TIMESTAMP, LOGINTIMEOUT TIMESTAMP, STATUS VARCHAR(10));
+
+INSERT into LOGINTIME values (2, 2,  parsedatetime('17-09-2012 18:47:52', 'dd-MM-yyyy hh:mm:ss'),  parsedatetime('17-09-2012 18:47:52', 'dd-MM-yyyy hh:mm:ss'), 'old' );
+INSERT into LOGINTIME values (1, 1,  parsedatetime('16-01-2020 19:40:50', 'dd-MM-yyyy hh:mm:ss'),  parsedatetime('16-01-2020 19:47:12', 'dd-MM-yyyy hh:mm:ss'), 'old' );

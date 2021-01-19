@@ -11,13 +11,20 @@
 <title>Form</title>
 </head>
 <body>
+<%
+	String error_message = " ";
+	Object error = request.getAttribute("error");
+	if (error != null)
+		error_message = error.toString();
+%>
 <h3>Login</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
 	<form name="loginForm" method = "POST" action="Validation">
+	<p style="color: red; text-align: center;"><b><%=error_message%></b></p>
 	User name* : <input type="text" name="username" value="" placeholder="username" required>
 	<br>
 	Password* : <input type="password" name="password" value="" placeholder="password" required>
-	<br><br>
+	<br><br> 
 	<p style="color: red;"><i>* Required field</i></p> 
 	<input type="submit" value="Submit">
 	<br>
