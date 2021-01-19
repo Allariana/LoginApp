@@ -80,9 +80,11 @@ public class ChangePassword extends HttpServlet {
 						}
 					}
 				}
-			} else
-				out.println("Different passwords!");
-
+			} else {
+				out.println("Different password!");
+//				request.setAttribute("error", "Different password!");
+//				request.getRequestDispatcher("/form.jsp").forward(request, response);
+			}
 		} catch (Exception e) {
 			System.out.println("The exception is" + e);
 
