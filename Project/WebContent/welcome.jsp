@@ -35,11 +35,33 @@ td {
 </style>
 <body>
 
+<script>
+function ShowHideTab() {
+	  var x = document.getElementById('tab');
+	  if (x.style.visibility === 'hidden') {
+	    x.style.visibility = 'visible';
+	  } else {
+	    x.style.visibility = 'hidden';
+	  }
+	}
+
+
+function ShowHideTab2() {
+	  var x = document.getElementById('tab2');
+	  if (x.style.visibility === 'hidden') {
+	    x.style.visibility = 'visible';
+	  } else {
+	    x.style.visibility = 'hidden';
+	  }
+	}
+</script>
+
+
 	<sql:setDataSource var="db1" driver="org.h2.Driver"
 		url="jdbc:h2:tcp://localhost/~/test10" user="sa" password="" />
 		
 		<sql:query var="query1" dataSource="${db1}">
-		SELECT * FROM TIME t JOIN USER u ON u.id=t.user_id where u.username = ?
+		SELECT * FROM LOGINTIME t JOIN USER u ON u.id=t.user_id where u.username = ?
 		<sql:param value="${username}"/>
 	</sql:query>
 		
@@ -49,22 +71,43 @@ td {
         <br>
         <font color="black" size="3">
         
-        <table style="width:50%" class="center">
-        <caption style="text-align:center">Table with your data</caption>
+        <input type="button" value="Show/Hide table with your login data" onclick="ShowHideTab();">
+        <br>
+        <table id="tab" class="center">
+        <caption style="text-align:center">Table with your login data</caption>
 			<tr>
-				<th>ID</th>
-				<th>Username</th>
-				<th>Login Date</th>
 				<th>Login time</th>
 				<th>Login timeout</th>
 			</tr>
 			<tr>
 			<c:forEach var="row" items="${query1.rows}">
-					<td><c:out value="${row.user_id}" /></td>
-					<td>${username}</td>
-					<td>${row.date}</td>
 					<td><c:out value="${row.logintime}" /></td>
 					<td><c:out value="${row.logintimeout}" /></td>
+				</tr>
+				</c:forEach>
+		</table>
+		<br><br>
+		<sql:query var="query2" dataSource="${db1}">
+		SELECT * FROM PASSWORD p JOIN USER u ON u.id=p.user_id where status = 'ACTUAL' and u.username = ?
+		<sql:param value="${username}"/>
+	</sql:query>
+		
+		<input type="button" value="Show/hide table with your password data" onclick="ShowHideTab2();">
+		<br>
+        <table id="tab2" class="center">
+        <caption style="text-align:center">Table with your password data</caption>
+			<tr>
+				<th>Password</th>
+				<th>Date of last password change</th>
+				<th>Date of the possibility of changing the password</th>
+				<th>Password Expiration Date</th>
+			</tr>
+			<tr>
+			<c:forEach var="row" items="${query2.rows}">
+					<td>Actual password</td>
+					<td><c:out value="${row.date}" /></td>
+					<td><c:out value="${row.expire_min}" /></td>
+					<td><c:out value="${row.expire_max}" /></td>
 				</tr>
 				</c:forEach>
 		</table>
