@@ -38,3 +38,8 @@ INSERT into TIME values (1, 1, DATE '2021-01-15',  TIME '15:04:32',  TIME '16:04
 INSERT into TIME values (2, 2,  DATE '2021-01-14', TIME '20:04:32', TIME '20:20:32', 'old'); 
 
 SELECT * FROM TIME;
+
+--
+CREATE TABLE LOGINTEST (id number, user_id number);
+
+CREATE TABLE BLOCK (id number, user_id number, date_start timestamp, date_end timestamp);
