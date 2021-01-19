@@ -2,14 +2,6 @@ package pl.imsi;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.util.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,38 +9,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class Validation
- */
+
 @WebServlet("/Validation")
 public class Validation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public Validation() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public void init() throws ServletException {
 
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Database database = new Database();
 		Boolean b = false;
@@ -64,7 +42,8 @@ public class Validation extends HttpServlet {
 				b = database.checkIfUserIsBlocked(username);
 				if (b) {
 					if (b)
-						out.print("Your account is blocked!");
+						request.setAttribute("error", "Your account is blocked!");
+						request.getRequestDispatcher("/form.jsp").forward(request, response);
 				} else {
 
 					b = database.checkIfIsPasswordCorrect(username, password);
@@ -95,7 +74,7 @@ public class Validation extends HttpServlet {
 							database.insertIntoTime(id);
 							database.deleteFromLoginTest(id);
 							request.setAttribute("username", request.getParameter("username"));
-							request.getRequestDispatcher("/welcome.jsp").forward(request, response);
+							request.getRequestDispatcher("welcome.jsp").forward(request, response);
 						}
 
 					}
@@ -103,7 +82,8 @@ public class Validation extends HttpServlet {
 			}
 
 			else {
-				out.println("There is no such user!");
+				request.setAttribute("error","There is no such user!");
+				request.getRequestDispatcher("/form.jsp").forward(request, response);
 			}
 
 		} catch (Exception e) {

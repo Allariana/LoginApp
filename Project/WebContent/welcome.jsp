@@ -13,49 +13,46 @@
 </head>
 
 <style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-th, td {
-  padding: 5px;
-  text-align: center;
-}
-th {
-  background-color: #e3edfc;
-}
-td {
-  cellpadding="5";
-  background-color: #f0f4fa;
-}
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	}
+	th, td {
+	  padding: 5px;
+	  text-align: center;
+	}
+	th {
+	  background-color: #e3edfc;
+	}
+	td {
+	  cellpadding="5";
+	  background-color: #f0f4fa;
+	}
 </style>
 <body>
-
 <script>
-function ShowHideTab() {
-	  var x = document.getElementById('tab');
-	  if (x.style.visibility === 'hidden') {
-	    x.style.visibility = 'visible';
-	  } else {
-	    x.style.visibility = 'hidden';
-	  }
-	}
-
-
-function ShowHideTab2() {
-	  var x = document.getElementById('tab2');
-	  if (x.style.visibility === 'hidden') {
-	    x.style.visibility = 'visible';
-	  } else {
-	    x.style.visibility = 'hidden';
-	  }
-	}
+	function ShowHideTab() {
+		  var x = document.getElementById('tab');
+		  if (x.style.visibility === 'hidden') {
+		    x.style.visibility = 'visible';
+		  } else {
+		    x.style.visibility = 'hidden';
+		  }
+		}
+	
+	function ShowHideTab2() {
+		  var x = document.getElementById('tab2');
+		  if (x.style.visibility === 'hidden') {
+		    x.style.visibility = 'visible';
+		  } else {
+		    x.style.visibility = 'hidden';
+		  }
+		}
 </script>
-
 
 	<sql:setDataSource var="db1" driver="org.h2.Driver"
 		url="jdbc:h2:tcp://localhost/~/test10" user="sa" password="" />
