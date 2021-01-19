@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 @WebServlet("/Validation")
 public class Validation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -43,12 +42,12 @@ public class Validation extends HttpServlet {
 				if (b) {
 					if (b)
 						request.setAttribute("error", "Your account is blocked!");
-						request.getRequestDispatcher("/form.jsp").forward(request, response);
+					request.getRequestDispatcher("/form.jsp").forward(request, response);
 				} else {
 
 					b = database.checkIfIsPasswordCorrect(username, password);
 					if (b == false) {
-						out.println("Password is incorrect!");
+
 						id = database.getUserId(username);
 						if (id.equals("0")) {
 						} else {
@@ -56,12 +55,18 @@ public class Validation extends HttpServlet {
 						}
 
 						String count = database.countValid(id);
-						out.println("You have typed incorrect password " + count + " times!");
+
 						if (count.equals("3")) {
 							database.blockAccount(id);
-							out.println("Your account is blocked!");
-						}
 
+							request.setAttribute("error", "Password is incorrect!\nYou have typed incorrect password "
+									+ count + " times! Your account is blocked!");
+							request.getRequestDispatcher("/form.jsp").forward(request, response);
+						} else {
+							request.setAttribute("error",
+									"Password is incorrect!\nYou have typed incorrect password " + count + " times!");
+							request.getRequestDispatcher("/form.jsp").forward(request, response);
+						}
 					} else {
 						b = database.checkIfIsPasswordExpired(username, password);
 						if (b) {
@@ -82,7 +87,7 @@ public class Validation extends HttpServlet {
 			}
 
 			else {
-				request.setAttribute("error","There is no such user!");
+				request.setAttribute("error", "There is no such user!");
 				request.getRequestDispatcher("/form.jsp").forward(request, response);
 			}
 
