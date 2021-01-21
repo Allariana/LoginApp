@@ -71,7 +71,8 @@ public class Validation extends HttpServlet {
 						b = database.checkIfIsPasswordExpired(username, password);
 						if (b) {
 							request.setAttribute("username", request.getParameter("username"));
-							request.getRequestDispatcher("/password2.jsp").forward(request, response);
+								request.setAttribute("error", "Your password is expired!");
+							request.getRequestDispatcher("/password.jsp").forward(request, response);
 						}
 
 						else {
