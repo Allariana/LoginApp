@@ -19,11 +19,7 @@
 table, th, td {
 	border: 1px solid black;
 	border-collapse: collapse;
-}
-
-table.center {
-	margin-left: auto;
-	margin-right: auto;
+	margin-left: 2%;
 }
 
 th, td {
@@ -38,40 +34,55 @@ th {
 td {cellpadding ="5";
 	background-color: #f0f4fa;
 }
+
+a:link, a:visited {
+	margin-left: 2%;
+	margin-right: 6%;
+	background-color: white;
+	color: black;
+	border: 2px solid blue;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+a:hover, a:active {
+	background-color: #f0f4fa;
+	color: black;
+}
+
+h1 {
+	margin-left: 3%;
+	color: blue;
+	text-align: left;
+}
 </style>
 <body>
 	<script>
 		function ShowHideTab() {
 			var x = document.getElementById('tab');
-			if (x.style.visibility === 'hidden') {
-				x.style.visibility = 'visible';
+			if (x.style.display === 'none') {
+				x.style.display = 'block';
 			} else {
-				x.style.visibility = 'hidden';
+				x.style.display = 'none';
 			}
 		}
 
 		function ShowHideTab2() {
 			var x = document.getElementById('tab2');
-			if (x.style.visibility === 'hidden') {
-				x.style.visibility = 'visible';
+			if (x.style.display === 'none') {
+				x.style.display = 'block';
 			} else {
-				x.style.visibility = 'hidden';
+				x.style.display = 'none';
 			}
 		}
 		function ShowHideTab3() {
 			var x = document.getElementById('tab3');
-			if (x.style.visibility === 'hidden') {
-				x.style.visibility = 'visible';
+			if (x.style.display === 'none') {
+				x.style.display = 'block';
 			} else {
-				x.style.visibility = 'hidden';
-			}
-		}
-		function ShowHideTab4() {
-			var x = document.getElementById('tab4');
-			if (x.style.visibility === 'hidden') {
-				x.style.visibility = 'visible';
-			} else {
-				x.style.visibility = 'hidden';
+				x.style.display = 'none';
 			}
 		}
 	</script>
@@ -88,14 +99,16 @@ td {cellpadding ="5";
 	</sql:query>
 
 	<div style="border: 1px">
-		<h1 style="color: blue; text-align: center;">
+		<h1>
 			<b>Welcome</b>
 		</h1>
-		<h1 style="color: blue; text-align: center;">dear ${username}</h1>
+		<h1 style="color: blue; text-align: left;">dear ${username}</h1>
+		<br> <a href="password.jsp?username=${username}">Change
+			password </a> <a href="LoginTimedOut?username=${username}">Logout</a> <br>
 		<br> <font color="black" size="3"> <input type="button"
-			value="Show/Hide table with your events" onclick="ShowHideTab();">
-			<br>
-			<table id="tab" class="center">
+			value="Show/Hide table with your events" style="margin-left: 2%;"
+			onclick="ShowHideTab();"> <br>
+			<table id="tab">
 				<caption style="text-align: center">Table with your events</caption>
 				<tr>
 					<th>Type of event</th>
@@ -109,13 +122,12 @@ td {cellpadding ="5";
 						<td><c:out value="${row.DATE_END}" /></td>
 				</tr>
 				</c:forEach>
-			</table> <br> <br> 
-			<sql:query var="query2" dataSource="${db1}">
+			</table> <br><br> <sql:query var="query2" dataSource="${db1}">
 		SELECT * FROM PASSWORD p JOIN USER u ON u.id=p.user_id where date_end is null and u.username = ?
 		<sql:param value="${username}" />
 			</sql:query> <input type="button" value="Show/hide table with your password data"
-			onclick="ShowHideTab2();"> <br>
-			<table id="tab3" class="center">
+			style="margin-left: 2%;" onclick="ShowHideTab2();"> <br>
+			<table id="tab2">
 				<caption style="text-align: center">Table with your
 					password data</caption>
 				<tr>
@@ -132,14 +144,13 @@ td {cellpadding ="5";
 						<td><c:out value="${row.expire_max}" /></td>
 				</tr>
 				</c:forEach>
-			</table> <br> <br>
-
-			<sql:query var="query4" dataSource="${db1}">
+			</table> <br><br> <sql:query var="query4" dataSource="${db1}">
 		SELECT * FROM PASSWORD p JOIN USER u ON u.id=p.user_id where date_end is not null and u.username = ?
 		<sql:param value="${username}" />
-			</sql:query> <input type="button" value="Show/hide table with history of passwords"
-			onclick="ShowHideTab4();"> <br>
-			<table id="tab3" class="center">
+			</sql:query> <input type="button"
+			value="Show/hide table with history of passwords"
+			style="margin-left: 2%;" onclick="ShowHideTab3();"> <br>
+			<table id="tab3">
 				<caption style="text-align: center">Table with your
 					history of passwords</caption>
 				<tr>
@@ -154,14 +165,7 @@ td {cellpadding ="5";
 						<td><c:out value="${row.DATE_END}" /></td>
 				</tr>
 				</c:forEach>
-			</table> <br> <br>
-
-			<tr>
-			<td><a href="password.jsp?username=${username}">Change
-					password</a></td>
-			<td><div style="text-align: right">
-				<a href="LoginTimedOut?username=${username}">Logout</a>
-			</div></td></tr>
+			</table>
 	</div>
 </body>
 </html>
