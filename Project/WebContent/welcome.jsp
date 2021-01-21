@@ -17,8 +17,6 @@
 
 <style>
 table, th, td {
-	border: 1px solid black;
-	border-collapse: collapse;
 	margin-left: 2%;
 }
 
@@ -105,7 +103,7 @@ h1 {
 		<h1 style="color: blue; text-align: left;">dear ${username}</h1>
 		<br> <a href="password.jsp?username=${username}">Change
 			password </a> <a href="LoginTimedOut?username=${username}">Logout</a> <br>
-		<br> <font color="black" size="3"> <input type="button"
+		<br> <input type="button"
 			value="Show/Hide table with your events" style="margin-left: 2%;"
 			onclick="ShowHideTab();"> <br>
 			<table id="tab">
