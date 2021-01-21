@@ -55,16 +55,19 @@ public class ChangePassword extends HttpServlet {
 			b = database.checkIfIsPasswordMinimumIntervalPassed(id);
 
 			if (b == false) {
-				out.println("Password not passed the minimum validity interval!");
+				request.setAttribute("error", "Password not passed the minimum validity interval!");
+				request.getRequestDispatcher("/password.jsp").forward(request, response);
 			} else if (password.equals(r_password)) {
 
 				b = database.checkIfIsUserHadThisPassword(id, password);
 				if (b) {
-					out.println("You have used this password earlier!");
+					request.setAttribute("error", "You have used this password earlier!");
+					request.getRequestDispatcher("/password.jsp").forward(request, response);
 				} else {
-					if (password.length() < 8)
-						out.println("Password is too short! Password must have at least 8 letters!");
-
+					if (password.length() < 8) {
+						request.setAttribute("error", "Password is too short! Password must have at least 8 letters!");
+					request.getRequestDispatcher("/password.jsp").forward(request, response);
+					}
 					else {
 						String regex = "^(?=.*[a-z])(?=." + "*[A-Z])(?=.*\\d)" + "(?=.*[-+_!@#$%^&*., ?]).+$";
 						Pattern p = Pattern.compile(regex);
@@ -74,16 +77,15 @@ public class ChangePassword extends HttpServlet {
 							database.updateLogoutTime(id);
 							request.getRequestDispatcher("/form.jsp").forward(request, response);
 						} else {
-							out.println("Password does not meet the complexity requirement!");
-							out.println(
-									"Password must contain uppercase, lowercase, special character and numeric value.");
+							request.setAttribute("error", "Password does not meet the complexity requirement!"
+									+ " Password must contain uppercase, lowercase, special character and numeric value.");
+							request.getRequestDispatcher("/password.jsp").forward(request, response);
 						}
 					}
 				}
 			} else {
-				out.println("Different password!");
-//				request.setAttribute("error", "Different password!");
-//				request.getRequestDispatcher("/form.jsp").forward(request, response);
+				request.setAttribute("error", "Different passwords!");
+				request.getRequestDispatcher("/password.jsp").forward(request, response);
 			}
 		} catch (Exception e) {
 			System.out.println("The exception is" + e);
