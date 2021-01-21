@@ -63,7 +63,7 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and p.status = 'ACTUAL'";
+			String sql = "select * from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and p.date_end is null";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, password);
@@ -188,7 +188,7 @@ public class Database {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
 			preparedStatement.execute();
-			sql = "INSERT INTO BLOCK VALUES ((VALUES NEXT VALUE FOR auto.number),?,SYSDATE, SYSDATE+1);";
+			sql = "INSERT INTO BLOCK VALUES((VALUES NEXT VALUE FOR auto.number), ?,parsedatetime(sysdate,'yyyy-MM-dd hh:mm:ss'), parsedatetime(sysdate + 1,'yyyy-MM-dd hh:mm:ss'));";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
 			preparedStatement.execute();
@@ -221,7 +221,7 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "select p.expire_max from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and p.status = 'ACTUAL'";
+			String sql = "select p.expire_max from user u join password p on u.id = p.user_id where u.username = ? and p.password = ? and p.date_end is null";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, password);
@@ -244,7 +244,7 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "select expire_min from password where user_id = ? and status = 'ACTUAL'";
+			String sql = "select expire_min from password where user_id = ? and date_end is null";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
 			rs = preparedStatement.executeQuery();
@@ -302,12 +302,12 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql2 = "UPDATE PASSWORD SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+			String sql2 = "UPDATE PASSWORD SET DATE_END=sysdate WHERE USER_ID = ? AND DATE_END is null ";
 			preparedStatement = connection.prepareStatement(sql2);
 			preparedStatement.setString(1, id);
 			preparedStatement.execute();
 
-			String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, SYSDATE+1, SYSDATE+30, 'ACTUAL'); ";
+			String sql = "INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), ?,?, SYSDATE, null, SYSDATE+1, SYSDATE+30); ";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
 			preparedStatement.setString(2, password);

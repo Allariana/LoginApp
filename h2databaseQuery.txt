@@ -51,3 +51,30 @@ CREATE TABLE LOGINTIME (ID NUMBER, USER_ID NUMBER, LOGINTIME TIMESTAMP, LOGINTIM
 
 INSERT into LOGINTIME values (2, 2,  parsedatetime('17-09-2012 18:47:52', 'dd-MM-yyyy hh:mm:ss'),  parsedatetime('17-09-2012 18:47:52', 'dd-MM-yyyy hh:mm:ss'), 'old' );
 INSERT into LOGINTIME values (1, 1,  parsedatetime('16-01-2020 19:40:50', 'dd-MM-yyyy hh:mm:ss'),  parsedatetime('16-01-2020 19:47:12', 'dd-MM-yyyy hh:mm:ss'), 'old' );
+
+SELECT * FROM PASSWORD;
+SELECT * FROM PASSWORD where date_end is null;
+
+SELECT * FROM BLOCK;
+DELETE FROm BLOCK
+INSERT INTO BLOCK VALUES((VALUES NEXT VALUE FOR auto.number), 1,parsedatetime(sysdate-2,'yyyy-MM-dd hh:mm'), parsedatetime(sysdate - 1,'yyyy-MM-dd hh:mm'));
+UPDATE BLOCK SET DATE_END = parsedatetime(sysdate-2,'yyyy-MM-dd hh:mm');
+
+DROP TABLE PASSWORD
+CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date, date_end date, expire_min date, expire_max date);
+
+INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'Piesek?1', DATE '2021-01-06', null, DATE '2021-01-07', DATE '2021-02-06'); 
+INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Kotek@23', DATE '2021-01-05', null, DATE '2021-01-06', DATE '2021-02-05');
+
+--
+DROP TABLE PASSWORD
+CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date, date_end date, expire_min date, expire_max date);
+
+INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'Piesek?1', DATE '2021-01-06', null, DATE '2021-01-07', DATE '2021-02-06'); 
+INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Kotek@23', DATE '2021-01-05', null, DATE '2021-01-06', DATE '2021-02-05');
+
+SELECT 'BLOCK' AS TYPE_OF_EVENT, DATE_START AS DATE_START, DATE_END AS DATE_END FROM BLOCK where user_id = 1
+UNION
+SELECT 'LOGIN' AS TYPE_OF_EVENT, LOGINTIME AS DATE_START, LOGINTIMEOUT AS DATE_END FROM LOGINTIME where user_id = 1
+UNION 
+SELECT 'PASSWORD' AS TYPE_OF_EVENT, DATE AS DATE_START, DATE_END AS DATE_END FROM FROm PASSWORD where user_id = 1
