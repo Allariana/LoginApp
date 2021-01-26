@@ -3,82 +3,20 @@ INSERT into USER values (1, 'Olszewski', 'Wiktor', 'wolszewski@gmail.com', 'wols
 INSERT into USER values (2, 'Legierska', 'Laura', 'llegierska@gmail.com', 'llegierska'); 
 SELECT * FROM USER;
 
-CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date);
-INSERT into PASSWORD values (1, 1, 'kE3B54eEkGRW0w8', DATE '2021-01-06'); 
-INSERT into PASSWORD values (2, 2, 'Idl3aZ8qdjS9m9G', DATE '2021-01-05'); 
-SELECT * FROM PASSWORD;
-
---
-DELETE FROM PASSWORD;
-
 create schema auto;
 create sequence auto.number;
 
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'kE3B54eEkGRW0w8', DATE '2021-01-06'); 
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Idl3aZ8qdjS9m9G', DATE '2021-01-05');
+CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date, date_end date, expire_min date, expire_max date);
 
+INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'Piesek?1', SYSDATE, null, SYSDATE+1, SYSDATE+30); 
+INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Kotek@23', SYSDATE, null, SYSDATE+1, SYSDATE+30);
 SELECT * FROM PASSWORD;
 
-DELETE FROM PASSWORD WHERE ID=9;
+CREATE TABLE LOGINTIME (ID NUMBER, USER_ID NUMBER, LOGINTIME TIMESTAMP, LOGINTIMEOUT TIMESTAMP);
 
---
-DROP TABLE PASSWORD
-CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date, expire_min date, expire_max date, status varchar(10));
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'Piesek?1', DATE '2021-01-06', DATE '2021-01-07', DATE '2021-02-06', 'ACTUAL'); 
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Kotek@23', DATE '2021-01-05', DATE '2021-01-06', DATE '2021-02-05', 'ACTUAL');
-SELECT * FROM PASSWORD;
-
-UPDATE PASSWORD SET EXPIRE_MAX = '2021-01-09' WHERE ID=18
-UPDATE PASSWORD SET EXPIRE_MIN = '2021-01-08' WHERE ID=21
-
---
-CREATE TABLE TIME (id number, user_id number, Date date, LoginTime time, LoginTimeOut time, Status varchar(10));
-
-INSERT into TIME values (1, 1, DATE '2021-01-15',  TIME '15:04:32',  TIME '16:04:32', 'old' );
-INSERT into TIME values (2, 2,  DATE '2021-01-14', TIME '20:04:32', TIME '20:20:32', 'old'); 
-
-SELECT * FROM TIME;
-
---
 CREATE TABLE LOGINTEST (id number, user_id number);
 
 CREATE TABLE BLOCK (id number, user_id number, date_start timestamp, date_end timestamp);
 
----
-DROP TABLE TIME
 
-CREATE TABLE LOGINTIME (ID NUMBER, USER_ID NUMBER, LOGINTIME TIMESTAMP, LOGINTIMEOUT TIMESTAMP, STATUS VARCHAR(10));
 
-INSERT into LOGINTIME values (2, 2,  parsedatetime('17-09-2012 18:47:52', 'dd-MM-yyyy hh:mm:ss'),  parsedatetime('17-09-2012 18:47:52', 'dd-MM-yyyy hh:mm:ss'), 'old' );
-INSERT into LOGINTIME values (1, 1,  parsedatetime('16-01-2020 19:40:50', 'dd-MM-yyyy hh:mm:ss'),  parsedatetime('16-01-2020 19:47:12', 'dd-MM-yyyy hh:mm:ss'), 'old' );
-
-SELECT * FROM PASSWORD;
-SELECT * FROM PASSWORD where date_end is null;
-
-SELECT * FROM BLOCK;
-DELETE FROm BLOCK
-INSERT INTO BLOCK VALUES((VALUES NEXT VALUE FOR auto.number), 1,parsedatetime(sysdate-2,'yyyy-MM-dd hh:mm'), parsedatetime(sysdate - 1,'yyyy-MM-dd hh:mm'));
-UPDATE BLOCK SET DATE_END = parsedatetime(sysdate-2,'yyyy-MM-dd hh:mm');
-
-DROP TABLE PASSWORD
-CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date, date_end date, expire_min date, expire_max date);
-
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'Piesek?1', DATE '2021-01-06', null, DATE '2021-01-07', DATE '2021-02-06'); 
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Kotek@23', DATE '2021-01-05', null, DATE '2021-01-06', DATE '2021-02-05');
-
---
-DROP TABLE PASSWORD
-CREATE TABLE PASSWORD (id number, user_id number, password varchar(30), date date, date_end date, expire_min date, expire_max date);
-
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 1,'Piesek?1', DATE '2021-01-06', null, DATE '2021-01-07', DATE '2021-02-06'); 
-INSERT into PASSWORD values ((VALUES NEXT VALUE FOR auto.number), 2, 'Kotek@23', DATE '2021-01-05', null, DATE '2021-01-06', DATE '2021-02-05');
-
-SELECT 'BLOCK' AS TYPE_OF_EVENT, DATE_START AS DATE_START, DATE_END AS DATE_END FROM BLOCK where user_id = 1
-UNION
-SELECT 'LOGIN' AS TYPE_OF_EVENT, LOGINTIME AS DATE_START, LOGINTIMEOUT AS DATE_END FROM LOGINTIME where user_id = 1
-UNION 
-SELECT 'PASSWORD' AS TYPE_OF_EVENT, DATE AS DATE_START, DATE_END AS DATE_END FROM FROm PASSWORD where user_id = 1
-
---
-DROP TABLE LOGINTIME
-CREATE TABLE LOGINTIME (ID NUMBER, USER_ID NUMBER, LOGINTIME TIMESTAMP, LOGINTIMEOUT TIMESTAMP);
