@@ -16,6 +16,7 @@
 	if (error != null)
 		error_message = error.toString();
 %>
+<center>
 <h3>${param.username}, change your password</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
 <form name="loginForm" method = "POST" action="ChangePassword">	
@@ -29,6 +30,6 @@
 	<input type="hidden" name="username" value="${param.username}">
 	</form>
 </div>
-
+</center>
 </body>
 </html>

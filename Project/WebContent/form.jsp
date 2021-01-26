@@ -17,19 +17,20 @@
 	if (error != null)
 		error_message = error.toString();
 %>
+<center>
 <h3>Login</h3>
 <div style="border:1px solid #D0D0D0;width:400px;padding:10px;">
 	<form name="loginForm" method = "POST" action="Validation">
 	<p style="color: red; text-align: center;"><b><%=error_message%></b></p>
-	User name* : <input type="text" name="username" value="" placeholder="username" required>
+	Username*: <input type="text" name="username" value="" placeholder="username" required>
 	<br>
-	Password* : <input type="password" name="password" value="" placeholder="password" required>
+	Password*: <input type="password" name="password" value="" placeholder="password" required>
 	<br><br> 
 	<p style="color: red;"><i>* Required field</i></p> 
 	<input type="submit" value="Submit">
 	<br>
 	</form>
 </div>
-
+</center>
 </body>
 </html>
