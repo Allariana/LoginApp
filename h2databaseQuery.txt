@@ -18,5 +18,9 @@ CREATE TABLE LOGINTEST (id number, user_id number);
 
 CREATE TABLE BLOCK (id number, user_id number, date_start timestamp, date_end timestamp);
 
+UPDATE PASSWORD SET EXPIRE_MIN = (DATE '2021-01-22') WHERE ID=328
+
+UPDATE PASSWORD SET EXPIRE_MAX = (DATE '2021-01-22') WHERE ID=328
+
 
 
