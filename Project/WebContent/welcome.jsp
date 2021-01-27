@@ -130,9 +130,9 @@ h1 {
 					password data</caption>
 				<tr>
 					<th>Password</th>
-					<th>Date of last password change</th>
-					<th>Date of the possibility of changing the password</th>
-					<th>Password Expiration Date</th>
+					<th>Date of last change</th>
+					<th>When you can change password</th>
+					<th>Expiration Date</th>
 				</tr>
 				<tr>
 					<c:forEach var="row" items="${query2.rows}">

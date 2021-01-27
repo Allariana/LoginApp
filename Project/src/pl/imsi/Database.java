@@ -105,7 +105,7 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "select LOGINTIMEOUT from LOGINTIME where user_id = ? and status = 'ACTUAL'";
+			String sql = "select LOGINTIMEOUT from LOGINTIME where user_id = ? AND LOGINTIMEOUT is null";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
 			rs = preparedStatement.executeQuery();
@@ -265,7 +265,7 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql = "INSERT into LOGINTIME(ID,USER_ID, LOGINTIME, LOGINTIMEOUT, STATUS) values ((VALUES NEXT VALUE FOR auto.number),?, parsedatetime(sysdate,'yyyy-MM-dd hh:mm:ss'), null, 'ACTUAL')";
+			String sql = "INSERT into LOGINTIME(ID,USER_ID, LOGINTIME, LOGINTIMEOUT) values ((VALUES NEXT VALUE FOR auto.number),?, parsedatetime(sysdate,'yyyy-MM-dd hh:mm:ss'), null)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, id);
 			preparedStatement.execute();
@@ -281,13 +281,8 @@ public class Database {
 		try {
 			Class.forName("org.h2.Driver");
 			connection = DriverManager.getConnection(connectionURL, "sa", "");
-			String sql2 = "UPDATE LOGINTIME SET LOGINTIMEOUT=parsedatetime(sysdate,'yyyy-MM-dd hh:mm:ss') WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
+			String sql2 = "UPDATE LOGINTIME SET LOGINTIMEOUT=parsedatetime(sysdate,'yyyy-MM-dd hh:mm:ss') WHERE USER_ID = ? AND LOGINTIMEOUT is null ";
 			preparedStatement = connection.prepareStatement(sql2);
-			preparedStatement.setString(1, id);
-			preparedStatement.execute();
-
-			String sql1 = "UPDATE LOGINTIME SET STATUS='OLD' WHERE USER_ID = ? AND STATUS = 'ACTUAL' ";
-			preparedStatement = connection.prepareStatement(sql1);
 			preparedStatement.setString(1, id);
 			preparedStatement.execute();
 
